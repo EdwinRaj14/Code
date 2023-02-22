@@ -20,17 +20,19 @@ public class SimAuto {
     public static WebDriver driver;
     public static int priority;
     public static String simPriority;
-    public static int date;
-    public static int month;
-    public static int year;
     public static int startDate;
-
+    public static int startMonth;
+    public static int startYear;
+    public static int endDate;
+    public static int endMonth;
+    public static int endYear;
 
     public static void main(String args[]) {
         getValuesforLogin();
         simStatus();
         simPriority();
-        dateSelection();
+        startDateSelection();
+        endDateSelection();
         urlLaunch();
         statusSelection();
         SimPrioritySelection();
@@ -126,19 +128,52 @@ public class SimAuto {
             driver.findElement(By.xpath("//input[@value='High']")).click();
         }
         driver.findElement(By.xpath("//button[@data-name='add-search-filter-button']")).click();
-       driver.findElement(By.id("initiate-search")).click();
+     //  driver.findElement(By.id("initiate-search")).click();
     }
-    public static void dateSelection()
+    public static void label()
     {
-        System.out.println("Enter the date you want 01 to 31");
-        date=scanner.nextInt();
-        System.out.println("Enter the month you want\n1.January\n 2.Feb \n 3.March\4 4.April \n 5.May \n 6.June \n 7.July \n 8.August \n 9.September \n 10.October \n 11.November \n 12.December");
-        month=scanner.nextInt();
-        System.out.println("Enter the year you want");
-        year=scanner.nextInt();
-        System.out.println(date+"/"+month+"/"+year);
-        startDate =date+month+year;
+    driver.findElement(By.xpath("//*[@id=\"select2-drop\"]/ul/li/div/span")).click();
 
+    }
+    public static void startDateSelection()
+    {
+        System.out.println("Enter the start date you want 01 to 31");
+        startDate=scanner.nextInt();
+        if(startDate>31)
+        {
+            System.out.println("Date shouldn't be greater than 31");
+            startDateSelection();
+        }
+        System.out.println("Enter the start month you want\n1.January\n 2.Feb \n 3.March\n 4.April \n 5.May \n 6.June \n 7.July \n 8.August \n 9.September \n 10.October \n 11.November \n 12.December");
+        startMonth=scanner.nextInt();
+        if(startMonth>12)
+        {
+            System.out.println("Month shouldn't be greater than 12");
+            startDateSelection();
+        }
+        System.out.println("Enter the start year you want");
+        startYear=scanner.nextInt();
+        System.out.println(startDate+"/"+startMonth+"/"+startYear);
+    }
+    public static void endDateSelection()
+    {
+        System.out.println("Enter the end date you want 01 to 31");
+        endDate=scanner.nextInt();
+        if(endDate>31)
+        {
+            System.out.println("Date shouldn't be greater than 31");
+            endDateSelection();
+        }
+        System.out.println("Enter the end month you want\n1.January\n 2.Feb \n 3.March\n 4.April \n 5.May \n 6.June \n 7.July \n 8.August \n 9.September \n 10.October \n 11.November \n 12.December");
+        endMonth=scanner.nextInt();
+        if(endMonth>12)
+        {
+            System.out.println("Month shouldn't be greater than 12");
+            endDateSelection();
+        }
+        System.out.println("Enter the end year you want");
+        endYear=scanner.nextInt();
+        System.out.println("0"+endDate+"/"+endMonth+"/"+endYear);
     }
     public static void dateClick(){
         driver.findElement(By.id("s2id_filter-dropdown")).click();
@@ -147,23 +182,10 @@ public class SimAuto {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", dates);
         driver.findElement(By.xpath("//*[@id=\"select2-drop\"]/ul/li[11]/div")).click();
         driver.findElement(By.xpath("/html/body/div[2]/div/div[1]/div[4]/div/div[1]/span/span/i")).click();
-        driver.findElement(By.xpath("//input[@type='text']")).sendKeys(month+"/"+date+"/"+year);
-        //driver.findElement(By.xpath("//input[@type='text']")).sendKeys(Keys.RETURN);
+        driver.findElement(By.xpath("(//input[@type='text'])[1]")).sendKeys(startMonth+"/"+startDate+"/"+startYear);
         driver.findElement(By.xpath("//input[@type='text']")).sendKeys(Keys.TAB);
-        driver.findElement(By.cssSelector("//input[@type='text']")).sendKeys(month+"/"+date+"/"+year);
-       /* String sMonth=driver.findElement(By.className("ui-datepicker-month")).getText();
-        System.out.println(sMonth);
-        String startYear= sMonth.split(" ")[0].trim();
-        String startMonth= sMonth.split(" ")[1].trim();
-
-        while(!(startMonth.equals("June")&&startYear.equals("2022"))){
-            driver.findElement(By.xpath("//a[@title='Prev']")).click();
-             sMonth=driver.findElement(By.className("ui-datepicker-month")).getText();
-            System.out.println(sMonth);
-            startYear= sMonth.split(" ")[0].trim();
-            startMonth= sMonth.split(" ")[1].trim();
-
-        }
-        driver.findElement(By.xpath("/a[@text()='23']")).click();*/
+        driver.findElement(By.xpath("(//input[@type='text'])[2]")).sendKeys(endMonth+"/"+endDate+"/"+endYear);
+        driver.findElement(By.xpath("//button[@data-name='add-search-filter-button']")).click();
+        driver.findElement(By.id("initiate-search")).click();
     }
 }
