@@ -31,18 +31,19 @@ public class SimAuto {
     public static int endDate;
     public static int endMonth;
     public static int endYear;
-    public static String start = "02/01/2023";
-    public static String end = "03/13/2023";
-    public static String drive= "chrome";
-
+    public static String start = "06/01/2023";
+    public static String end = "07/01/2023";
+    public static String drive = "chrome";
+    public static  String pin;
 
 
     static Excelread read = new Excelread();
 
     public static void main(String args[]) throws IOException, AWTException {
-        read.deleteExcelFile();
+
+       read.deleteExcelFile();
         getValuesforLogin();
-        // simStatus();
+        //simStatus();
         simPriority();
         startDateSelection();
         endDateSelection();
@@ -51,8 +52,7 @@ public class SimAuto {
         SimPrioritySelection();
         dateClick();
         downloadExcel();
-        read.excelRead();
-        read.mailReport();
+       // read.mailReport();
         scanner.close();
     }
 
@@ -63,6 +63,9 @@ public class SimAuto {
         // System.out.println("Enter Your Yuibikey pin");
         // password = scanner.next();
         password = "411013103006";
+        System.out.println("Place the finger on the zukey");
+        pin= scanner.next();
+
     }
 
     public static void startDateSelection() {
@@ -81,9 +84,6 @@ public class SimAuto {
         System.out.println("Enter the start year you want");
         startYear = scanner.nextInt();
         System.out.println(startDate + "/" + startMonth + "/" + startYear);*/
-        startDate = 2;
-        startMonth = 2;
-        startYear = 2023;
     }
 
     public static void endDateSelection() {
@@ -108,38 +108,45 @@ public class SimAuto {
 
     public static void urlLaunch() throws MalformedURLException {
         //Webpage initilization
-        if (drive=="chrome") {
+        if (drive == "chrome") {
             System.setProperty("webdriver.chrome.driver", "chromedriver");
             ChromeOptions options = new ChromeOptions();
             options.addArguments("--remote-allow-origins=*");
-          //  DesiredCapabilities cp = new DesiredCapabilities();
-            //cp.setCapability(ChromeOptions.CAPABILITY,options);
-            //options.merge(cp);
-            //options.setAcceptInsecureCerts(true);
+           // options.addArguments("--headless");
+            //options.addArguments("window-size=1200x600");
+          //  options.addArguments("headless");
+           // WebDriver driver = ChromeDriver(options);
+            DesiredCapabilities cp = new DesiredCapabilities();
+            cp.setCapability(ChromeOptions.CAPABILITY,options);
+            options.merge(cp);
+            options.setAcceptInsecureCerts(true);
             driver = new ChromeDriver(options);
-        }
-        else {
-            driver= new FirefoxDriver();
+        } else {
+            driver = new FirefoxDriver();
             System.setProperty("webdriver.gecko.driver", "geckodriver");
         }
         driver.manage().window().maximize();
 
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
-       driver.get("https://tinyurl.com/bdf5cfd5");
-        //Entering user name and password for
+        driver.get("https://tinyurl.com/ms4nhamz");
+        System.out.println("moving forward 1");
+    //Entering user name and password for
        try{ Thread.sleep(1000);}
        catch (Exception e)
-       {
-           e.printStackTrace();
-       }
+    {
+        e.printStackTrace();
+    }
+        System.out.println("moving forward 2");
         driver.findElement(By.id("user_name_field")).sendKeys(userName);
+        System.out.println("moving forward 3");
         driver.findElement(By.id("user_name_btn")).click();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.findElement(By.xpath("//*[@id=\"password_field\"]")).sendKeys(password);
+        driver.findElement(By.xpath("//*[@id=\"password_field\"]")).sendKeys(password+pin);
         driver.findElement(By.id("password_btn")).click();
-    }
+        System.out.println("moving forward 2");
+}
 
-    //clicking status for sim
+
     public static void statusSelection() {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.findElement(By.id("s2id_filter-dropdown")).click();
@@ -193,14 +200,13 @@ public class SimAuto {
             simPriority();
         }
         System.out.println("you selected " + simPriority + " sim");
+        System.out.println("moving forward");
     }
 
+
     public static void SimPrioritySelection() {
-        try{ Thread.sleep(60000);}
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+
+
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.findElement(By.id("s2id_filter-dropdown")).click();
         WebElement priorities = driver.findElement(By.xpath("//*[@id=\"select2-drop\"]/ul/li[34]/div"));
@@ -257,8 +263,10 @@ public class SimAuto {
         driver.findElement(By.xpath("//input[@type='text']")).sendKeys(Keys.TAB);
         //  driver.findElement(By.xpath("(//input[@type='text'])[2]")).sendKeys(endMonth + "/" + endDate + "/" + endYear);
         driver.findElement(By.xpath("(//input[@type='text'])[2]")).sendKeys(end);
+        driver.findElement(By.xpath("//input[@type='text']")).sendKeys(Keys.TAB);
         driver.findElement(By.xpath("//button[@data-name='add-search-filter-button']")).click();
         driver.findElement(By.id("initiate-search")).click();
+        System.out.println("moving forward");
     }
 
     public static void downloadExcel() throws AWTException {
@@ -266,11 +274,12 @@ public class SimAuto {
         driver.findElement(By.xpath("//a[@data-name='export-search-results']")).click();
         driver.findElement(By.id("xls")).click();
         driver.findElement(By.xpath("//*[@id='submit-custom-export-job']")).click();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
         driver.findElement(By.xpath("//*[@id=\"job-details\"]/div/section/div/div/table/tbody/tr/td[1]/a")).click();
         Robot robot = new Robot();
         robot.keyPress(KeyEvent.VK_ENTER); //press enter key
         robot.keyRelease(KeyEvent.VK_ENTER); //release enter key
+        System.out.println("moving forward");
     }
 }
 
